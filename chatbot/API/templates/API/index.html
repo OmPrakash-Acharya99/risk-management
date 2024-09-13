@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxxis  Customer Assessment Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 1rem;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #6600cc; /* Light blue */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #9933ff; /* Darker blue on hover */
+        }
+
+        .result-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #ddd;
+            overflow-y: auto; /* Enable scrolling */
+            max-height: 200px; /* Adjust the maximum height as needed */
+        }
+
+        .result-container h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        #result {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            form, .result-container {
+                padding: 15px;
+            }
+
+            textarea, #result {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            label, button {
+                font-size: 0.9rem;
+            }
+
+            textarea, #result {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Maxxis  Customer Assessment</h1>
+        <div class="result-container" id="resultContainer">
+            <h2>Assessment Result:</h2>
+            <p id="result"></p>
+        </div>
+        <form id="riskForm">
+            <label for="input">Your Prompt</label><br><br>
+            <textarea id="input" name="input" rows="4" cols="50"></textarea><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('riskForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const input = document.getElementById('input').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const resultElement = document.getElementById('result');
+
+            resultContainer.style.display = 'none';
+            resultElement.innerText = 'Assessing risk...';
+
+            try {
+                const response = await fetch('/api/risk_assessment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ input: input }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    resultElement.innerText = data.response;
+                    resultElement.style.color = '#27ae60'; // Success color
+                } else {
+                    resultElement.innerText = 'Error: ' + data.error;
+                    resultElement.style.color = '#e74c3c'; // Error color
+                }
+            } catch (error) {
+                resultElement.innerText = 'An error occurred while processing your request.';
+                resultElement.style.color = '#e74c3c'; // Error color
+            }
+
+            resultContainer.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

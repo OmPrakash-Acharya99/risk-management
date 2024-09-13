@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "risk-assisment"
+version = "0.1.0"
+description = ""
+authors = ["Om Prakash Acharya <somnathacharya23@gmai.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.1.1"
+openai = "^1.44.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
